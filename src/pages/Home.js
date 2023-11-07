@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDocs, collection, deleteDoc, doc, addDoc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase-config";
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { createCoupons } from "./stripecouponsgenerateforplan";
 
 function Home({ isAuth }) {
   const [postLists, setPostList] = useState([]);
@@ -44,6 +45,9 @@ function Home({ isAuth }) {
   function capitalizeFirstLetter(str) {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   }
+
+
+  
   const uploadImages = async () => {
     setUploading(true);
     let totalval0 = 1;
@@ -224,6 +228,9 @@ function Home({ isAuth }) {
       </button>
       {uploading && <p>Uploading...</p>}
       <p>{percent}</p>
+      <button onClick={() => createCoupons()}>
+        upload
+      </button>
       {postLists.map((post) => {
         return (
           <div className="post">
