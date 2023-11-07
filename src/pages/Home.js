@@ -53,7 +53,7 @@ function Home({ isAuth }) {
         if (!selectedFile) continue;
 
         // Check if the image already exists in Firebase Storage
-        const storageRef = ref(storage, `/lightning/${selectedFile.name}`);
+        const storageRef = ref(storage, `/logos/${selectedFile.name}`);
         let storageSnapshot = "";
         try {
           storageSnapshot = await getDownloadURL(storageRef);
@@ -74,7 +74,7 @@ function Home({ isAuth }) {
             async () => {
               // Get the image URL
               const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-              const docRef = doc(db, "data", "Lightning");
+              const docRef = doc(db, "templates", "logos");
               const docSnapshot = await getDoc(docRef);
               let selectedFileName = selectedFile?.name;
               let filename = selectedFileName.replace(".png", "").replaceAll("-", " ");
@@ -92,7 +92,7 @@ function Home({ isAuth }) {
                       title: filename,
                     },
                   ],
-                  title: "Lightning",
+                  title: "logos",
                 };
 
                 // Update Firestore document
@@ -107,7 +107,7 @@ function Home({ isAuth }) {
                       title: filename,
                     },
                   ],
-                  title: "Lightning",
+                  title: "logos",
                 };
                 await setDoc(docRef, { data: initialData });
                 console.log(`Image ${selectedFile.name} uploaded and data saved to Firestore.`);
@@ -219,7 +219,7 @@ function Home({ isAuth }) {
   return (
     <div className="homePage">
       <input type="file" multiple onChange={handleFileChange} />
-      <button onClick={uploadImages} disabled={uploading || selectedFiles?.length === 0}>
+      <button onClick={uploadImages} disabled={uploading}>
         Upload Images
       </button>
       {uploading && <p>Uploading...</p>}
