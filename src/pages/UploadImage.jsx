@@ -211,49 +211,49 @@ const UploadImage = () => {
             console.log(error);
           }
         }
-        // const docRef = doc(db, "Templates", `${title}_${subtitle}`);
-        // const docSnapshot = await getDoc(docRef);
-        // let selectedFileName = selectedFile?.name;
-        // let filename = selectedFileName
-        //   .replace(".png", "")
-        //   .replaceAll("-", " ");
-        // filename = capitalizeFirstLetter(filename);
+        const docRef = doc(db, "Templates", `${title}_${subtitle}`);
+        const docSnapshot = await getDoc(docRef);
+        let selectedFileName = selectedFile?.name;
+        let filename = selectedFileName
+          .replace(".png", "")
+          .replaceAll("-", " ");
+        filename = capitalizeFirstLetter(filename);
 
-        // if (docSnapshot.exists()) {
-        //   const data = docSnapshot.data();
-        //   const newData = {
-        //     ...data?.data,
-        //     data: [
-        //       ...(data.data.data || []),
-        //       {
-        //         image: imageUrl,
-        //         title: filename,
-        //       },
-        //     ],
-        //     title: title,
-        //     subtitle: subtitle,
-        //   };
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data();
+          const newData = {
+            ...data?.data,
+            data: [
+              ...(data.data.data || []),
+              {
+                image: imageUrl,
+                title: filename,
+              },
+            ],
+            title: title,
+            subtitle: subtitle,
+          };
 
-        //   await setDoc(docRef, { data: newData });
-        //   console.log(
-        //     `Image ${selectedFile.name} uploaded and data saved to Firestore.`
-        //   );
-        // } else {
-        //   const initialData = {
-        //     data: [
-        //       {
-        //         image: imageUrl,
-        //         title: filename,
-        //       },
-        //     ],
-        //     title: title,
-        //     subtitle: subtitle,
-        //   };
-        //   await setDoc(docRef, { data: initialData });
-        //   console.log(
-        //     `Image ${selectedFile.name} uploaded and data saved to Firestore.`
-        //   );
-        // }
+          await setDoc(docRef, { data: newData });
+          console.log(
+            `Image ${selectedFile.name} uploaded and data saved to Firestore.`
+          );
+        } else {
+          const initialData = {
+            data: [
+              {
+                image: imageUrl,
+                title: filename,
+              },
+            ],
+            title: title,
+            subtitle: subtitle,
+          };
+          await setDoc(docRef, { data: initialData });
+          console.log(
+            `Image ${selectedFile.name} uploaded and data saved to Firestore.`
+          );
+        }
       }
     } catch (error) {
       console.error("Error uploading images and saving data:", error);
