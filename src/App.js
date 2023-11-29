@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import { useState } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase-config";
+import UploadImage from "./pages/UploadImage";
 // import ClerkRoutes from "./clerkRoutes";
 
 function App() {
@@ -22,22 +23,24 @@ function App() {
   return (
     <Router>
       <nav>
-        <Link to="/"> Home </Link>
+        {/* <Link to="/"> Home </Link> */}
 
-        {!isAuth ? (
+        {/* {!isAuth ? (
           <Link to="/login"> Login </Link>
         ) : (
           <>
             <Link to="/createpost"> Create Post </Link>
             <button onClick={signUserOut}> Log Out</button>
           </>
-        )}
+        )} */}
+        <Link to="/uploadimage"> Upload Image </Link>
       </nav>
       {/* <ClerkRoutes /> */}
       <Routes>
-        <Route path="/" element={<Home isAuth={isAuth} />} />
+        <Route path="/" element={<UploadImage />} />
         <Route path="/createpost" element={<CreatePost isAuth={isAuth} />} />
         <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        <Route path="/uploadimage" element={<UploadImage />} />
       </Routes>
     </Router>
   );

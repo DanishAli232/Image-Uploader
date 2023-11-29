@@ -1,28 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getDocs, collection, deleteDoc, doc, addDoc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db, storage } from "../firebase-config";
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
-import { createCoupons } from "./stripecouponsgenerateforplan";
+import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
 
 function Home({ isAuth }) {
   const [postLists, setPostList] = useState([]);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [percent, setPercent] = useState(0);
-  const [uploading, setUploading] = useState(false);
-  const [totalvl, settotalvl] = useState(0);
-
-  useEffect(() => {
-    console.log(totalvl);
-  }, [totalvl]);
-  // const { isLoaded, isSignedIn, user } = useUser();
-  // const { isLoaded, userId, sessionId, getToken } = useAuth();
-
-  const handleFileChange = (e) => {
-    setSelectedFiles([...selectedFiles, ...Array.from(e.target.files)]);
-  };
-  // if (!isLoaded || !userId) {
-  //   return null;
-  // }
 
   const postsCollectionRef = collection(db, "posts");
 
@@ -30,6 +11,7 @@ function Home({ isAuth }) {
     const postDoc = doc(db, "posts", id);
     await deleteDoc(postDoc);
   };
+
   useEffect(() => {
     const getPosts = async () => {
       const data = await getDocs(postsCollectionRef);
@@ -38,100 +20,6 @@ function Home({ isAuth }) {
 
     getPosts();
   }, [deletePost]);
-
-  useEffect(() => {
-    console.log(selectedFiles);
-  }, [selectedFiles]);
-  function capitalizeFirstLetter(str) {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-
-  
-  const uploadImages = async () => {
-    setUploading(true);
-    let totalval0 = 1;
-
-    try {
-      for (const selectedFile of selectedFiles) {
-        if (!selectedFile) continue;
-
-        // Check if the image already exists in Firebase Storage
-        const storageRef = ref(storage, `/logos/${selectedFile.name}`);
-        let storageSnapshot = "";
-        try {
-          storageSnapshot = await getDownloadURL(storageRef);
-        } catch (error) {
-          storageSnapshot = "";
-          console.log(error);
-        }
-        if (!storageSnapshot) {
-          const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-              setPercent(`Uploading ${selectedFile.name}: ${percent}%`);
-            },
-            (err) => console.log(err),
-            async () => {
-              // Get the image URL
-              const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-              const docRef = doc(db, "templates", "logos");
-              const docSnapshot = await getDoc(docRef);
-              let selectedFileName = selectedFile?.name;
-              let filename = selectedFileName.replace(".png", "").replaceAll("-", " ");
-              filename = capitalizeFirstLetter(filename);
-
-              if (docSnapshot.exists()) {
-                // If the document exists, update its data structure
-                const data = docSnapshot.data();
-                const newData = {
-                  ...data?.data,
-                  data: [
-                    ...(data.data.data || []), // Existing data or empty array
-                    {
-                      image: imageUrl,
-                      title: filename,
-                    },
-                  ],
-                  title: "logos",
-                };
-
-                // Update Firestore document
-                await setDoc(docRef, { data: newData });
-                console.log(`Image ${selectedFile.name} uploaded and data saved to Firestore.`);
-              } else {
-                // If the document doesn't exist, create it with initial data structure
-                const initialData = {
-                  data: [
-                    {
-                      image: imageUrl,
-                      title: filename,
-                    },
-                  ],
-                  title: "logos",
-                };
-                await setDoc(docRef, { data: initialData });
-                console.log(`Image ${selectedFile.name} uploaded and data saved to Firestore.`);
-              }
-            }
-          );
-        } else {
-          console.log(` ${selectedFile.name} already exists`);
-          settotalvl(totalvl + 1);
-          console.log(totalval0);
-          totalval0 += 1;
-        }
-      }
-    } catch (error) {
-      console.error("Error uploading images and saving data:", error);
-    } finally {
-      setUploading(false);
-      setSelectedFiles([]);
-    }
-  };
 
   // const uploadImages = async () => {
   //   setUploading(true);
@@ -222,15 +110,7 @@ function Home({ isAuth }) {
   // };
   return (
     <div className="homePage">
-      <input type="file" multiple onChange={handleFileChange} />
-      <button onClick={uploadImages} disabled={uploading}>
-        Upload Images
-      </button>
-      {uploading && <p>Uploading...</p>}
-      <p>{percent}</p>
-      <button onClick={() => createCoupons()}>
-        upload
-      </button>
+      {/* <button onClick={() => createCoupons()}>upload</button> */}
       {postLists.map((post) => {
         return (
           <div className="post">
