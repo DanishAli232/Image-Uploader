@@ -211,7 +211,7 @@ const UploadImage = () => {
             console.log(error);
           }
         }
-        const docRef = doc(db, "Templates", `${title}_${subtitle}`);
+        const docRef = doc(db, "filters", `${title}`);
         const docSnapshot = await getDoc(docRef);
         let selectedFileName = selectedFile?.name;
         let filename = selectedFileName
@@ -231,7 +231,6 @@ const UploadImage = () => {
               },
             ],
             title: title,
-            subtitle: subtitle,
           };
 
           await setDoc(docRef, { data: newData });
@@ -247,7 +246,6 @@ const UploadImage = () => {
               },
             ],
             title: title,
-            subtitle: subtitle,
           };
           await setDoc(docRef, { data: initialData });
           console.log(
@@ -307,13 +305,13 @@ const UploadImage = () => {
             width: "300px",
           }}
           type="text"
-          placeholder="Enter SubTitle"
+          placeholder="Enter Title"
           value={title}
           onChange={(e) => {
             settitle(e.target.value);
           }}
         />
-        <input
+        {/* <input
           style={{
             padding: "10px",
             outline: "none",
@@ -326,7 +324,7 @@ const UploadImage = () => {
           onChange={(e) => {
             setsubtitle(e.target.value);
           }}
-        />
+        /> */}
       </div>
       <div className="uploaddiv">
         <div style={{ marginBottom: "12px", marginTop: "80px" }}>
