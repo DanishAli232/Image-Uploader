@@ -210,7 +210,7 @@ const UploadImage = () => {
             console.log(error);
           }
         }
-        const docRef = doc(db, "filters", `${title}_${subtitle}`);
+        const docRef = doc(db, "templates", `${title}_${subtitle}`);
         const docSnapshot = await getDoc(docRef);
         let selectedFileName = selectedFile?.name;
         let filename = selectedFileName
