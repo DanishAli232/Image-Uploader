@@ -197,7 +197,6 @@ const UploadImage = () => {
       for (const selectedFile of selectedFiles) {
         if (!selectedFile) continue;
         let imageUrl = "";
-        console.log(selectedFile);
         if (selectedFile) {
           const formdata = new FormData();
           formdata.append("image", selectedFile);
@@ -211,7 +210,7 @@ const UploadImage = () => {
             console.log(error);
           }
         }
-        const docRef = doc(db, "filters", `${title}`);
+        const docRef = doc(db, "filters", `${title}_${subtitle}`);
         const docSnapshot = await getDoc(docRef);
         let selectedFileName = selectedFile?.name;
         let filename = selectedFileName
@@ -231,6 +230,7 @@ const UploadImage = () => {
               },
             ],
             title: title,
+            subtitle,
           };
 
           await setDoc(docRef, { data: newData });
@@ -246,6 +246,7 @@ const UploadImage = () => {
               },
             ],
             title: title,
+            subtitle,
           };
           await setDoc(docRef, { data: initialData });
           console.log(
@@ -311,7 +312,7 @@ const UploadImage = () => {
             settitle(e.target.value);
           }}
         />
-        {/* <input
+        <input
           style={{
             padding: "10px",
             outline: "none",
@@ -324,7 +325,7 @@ const UploadImage = () => {
           onChange={(e) => {
             setsubtitle(e.target.value);
           }}
-        /> */}
+        />
       </div>
       <div className="uploaddiv">
         <div style={{ marginBottom: "12px", marginTop: "80px" }}>
